@@ -67,7 +67,7 @@ resource "aws_security_group" "mtc_sg" {
 
 resource "aws_key_pair" "mtc_auth" {
   key_name   = "mtckey2"
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = file("id_rsa.pub")
 }
 
 resource "aws_instance" "dev_node" {
@@ -79,7 +79,7 @@ resource "aws_instance" "dev_node" {
     user_data = file("userdata.tpl")
 
     root_block_device {
-        volume_size = 10
+        volume_size = 4
     }
     
     tags = {
@@ -90,7 +90,7 @@ resource "aws_instance" "dev_node" {
     command = templatefile("${var.host_os}-ssh-config.tpl", {
       hostname = self.public_ip,
       user     = "ubuntu",
-    identityfile = "~/.ssh/mtckey" })
+    identityfile = "~/.ssh/id_rsa" })
     interpreter = var.host_os == "windows" ? ["Powershell", "-Command"] : ["bash", "-c"]
   }
 }
